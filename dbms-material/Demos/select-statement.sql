@@ -15,6 +15,7 @@ select *
 from University;
 GO
 
+-- Write "from" command first to see all columns in your table when you write a query in "select" command 
 select u.UniversityName
 from University u;
 GO
