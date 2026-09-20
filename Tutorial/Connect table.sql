@@ -1,3 +1,5 @@
+
+-- Lecture Sep 14
 select UniversityName, CollegeName, DepartmentName
 
 from University u
