@@ -24,6 +24,9 @@ select u.UniversityName, u.City
 from University u;
 GO
 
+select UniversityName , City, State
+from University u
+
 select UniversityName as University, (City + ', ' + [State]) as CityState
 from University u
 
