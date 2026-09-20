@@ -30,6 +30,7 @@ from University u
 select UniversityName, (City + ', ' + [State])
 from University u
 
+-- Makes it easier to read, use parenthesis and do rename by "as" command.
 select UniversityName as University, (City + ', ' + [State]) as CityState
 from University u
 
