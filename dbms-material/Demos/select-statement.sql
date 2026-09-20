@@ -1,4 +1,5 @@
 
+-- Lecture Sep 16
 declare @result int;
 
 select @result = (5 + 3);
