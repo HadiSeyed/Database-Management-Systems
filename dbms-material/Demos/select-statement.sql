@@ -26,6 +26,7 @@ GO
 
 -- Write "from" command first to see all columns in your table 
 -- when you write a query in "select" command. 
+-- Dot gives you a list of available columns.
 select u.UniversityName
 from University u;
 GO
