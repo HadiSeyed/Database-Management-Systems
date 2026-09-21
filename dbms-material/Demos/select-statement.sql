@@ -1,6 +1,9 @@
 
 -- Lecture Sep 16
 
+-- There are three ways that give your valuable a value 
+-- by declare @name, select @result, and set @name.
+
 -- Create a variable in SQL using a declare. It's the keyword.
 -- The variables have to be prefixed with an at symbol (@).
 declare @result int;
