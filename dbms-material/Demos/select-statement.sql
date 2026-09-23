@@ -2,7 +2,8 @@
 -- Lecture Sep 16
 
 -- -- Change the database.
--- use YourDatabaseName;
+-- 1. use the button at the top right or in the bottom right to switch it
+-- 2. use YourDatabaseName;
 -- Go
 
 -- There are three ways that give your valuable a value 
