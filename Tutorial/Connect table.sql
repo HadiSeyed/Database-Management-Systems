@@ -1,5 +1,5 @@
 
--- Lecture Sep 14, 23
+-- Lecture Sep 14
 select UniversityName, CollegeName, DepartmentName
 
 from University u
@@ -7,3 +7,5 @@ from University u
     inner join Department d on col.CollegeId = d.CollegeId
     inner join Program p on d.DepartmentId = p.DepartmentId
     inner join Course c on p.ProgramId = c.ProgramId
+
+-- Lecture Sep 23
