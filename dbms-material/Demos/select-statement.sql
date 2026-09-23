@@ -1,9 +1,11 @@
 
 -- Lecture Sep 16
 
--- -- Change the database.
--- 1. use the button at the top right or in the bottom right to switch it
--- 2. use YourDatabaseName;
+-- -- Change the database:
+-- 1. change database totally: 
+-- use the button at the top right or in the bottom right to switch it.
+-- 2. change only in that script:
+-- use YourDatabaseName;
 -- Go
 
 -- There are three ways that give your valuable a value 
