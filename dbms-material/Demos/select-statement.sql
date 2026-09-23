@@ -1,6 +1,10 @@
 
 -- Lecture Sep 16
 
+-- -- Change the database.
+-- use YourDatabaseName;
+-- Go
+
 -- There are three ways that give your valuable a value 
 -- by declare @name, select @result, and set @name.
 
@@ -57,12 +61,14 @@ select * from  sys.all_columns
 select name from  sys.all_columns
 select name, column_id from  sys.all_columns
 
+-- Return the total number of rows in a table or a filtered result set.
 select count(*)
 from University
-
+-- Counts the number of non-null values in the UniversityId column.
 select count(UniversityId)
 from University
-
+-- Returns the total number of rows in a table, including rows with duplicate 
+-- or NULL values.
 select count(1)
 from University
 
