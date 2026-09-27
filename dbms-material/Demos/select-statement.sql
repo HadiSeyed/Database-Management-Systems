@@ -1,7 +1,7 @@
 
 -- Lecture Sep 16
 
--- -- Change the database (location):
+-- -- Change the database (location): (switch databases):
 -- 1. change database totally: 
 -- use the button at the top right or in the bottom right to switch it.
 -- 2. change only in that script:
@@ -11,7 +11,7 @@
 -- There are three ways that give your valuable a value 
 -- by declare @name, select @result, and set @name.
 
--- Create a variable in SQL using a declare. It's the keyword.
+-- Create a variable in SQL using a "declare". It's the keyword.
 -- The variables have to be prefixed with an at symbol (@).
 declare @result int;
 -- Select data from another table and then based off the data
@@ -31,9 +31,14 @@ select *
 from University;
 GO
 
--- Write "from" command first to see all columns in your table 
--- when you write a query in "select" command. 
--- Dot gives you a list of available columns.
+-- Only bring back a 10 records (first 10 records)
+select top 10 * 
+from University;
+GO
+
+-- Write "from" command first to see all columns in your University table 
+-- (list of fields) when you write a query in "select" command. 
+-- Dot (u.) gives you a list of available columns. 
 select u.UniversityName
 from University u;
 GO

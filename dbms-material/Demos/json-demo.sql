@@ -1,7 +1,7 @@
 
--- Lecture Sep 21
+-- Lecture Sep 21: DocumentDB
 
--- -- Change the database (location):
+-- -- Change the database (location): (switch databases):
 -- 1. change database totally: 
 -- use the button at the top right or in the bottom right to switch it.
 -- 2. change only in that script:
@@ -51,8 +51,9 @@ select
 from dbo.UniversityCollection u
 -- from the university the whole document, we pulled out the colleges.
 CROSS APPLY OpenJson (u.Document, '$.colleges') as c
--- c.value to get to the college object. on this college object, ($ refers to the
--- root of the college), give us the path is going to be the department's property. 
+-- c.value to get to the college object. on this college object, 
+-- ($ refers to the root of the college (value) (full JSON document)), 
+-- give us the path is going to be the department's property. 
 CROSS APPLY OpenJson (c.value, '$.departments') as d
 -- from each department object, shred the program's property which is a list of 
 -- programs on each department object.
