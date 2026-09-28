@@ -48,7 +48,22 @@ from University u
 select UniversityName, CollegeName, DepartmentName
 
 from University u
-    inner join College col on u.UniversityId = col.UniversityId
-    inner join Department d on col.CollegeId = d.CollegeId
+    inner join College c on u.UniversityId = c.UniversityId
+    inner join Department d on c.CollegeId = d.CollegeId
+-- how do we pull data out of the Program table that is somehow related
+-- to all the other tables that we have and so that we get essentially 
+-- correct data without any duplication, any weirdness
     inner join Program p on d.DepartmentId = p.DepartmentId
-    inner join Course c on p.ProgramId = c.ProgramId 
+    -- inner join Course c on p.ProgramId = c.ProgramId 
+
+
+-- even though I'm only bring back UniversityName in my query, every College
+-- here that has a valid UniversityId associated with it. 
+
+
+-- I just want to know how many records that are in College table.
+-- I don't want to do a bunch of unnecessary pulling data back and stuff
+-- that it's not necessary (use "count(1)"). So, there is no extra memory
+-- or data movement or anything. 
+select count(1)
+from College
