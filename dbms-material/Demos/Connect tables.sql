@@ -72,7 +72,8 @@ from University u
     --                         d.DepartmentId = co.DepartmentId and 
     --                         c.CollegeId = co.CollegeId and 
     --                         u.UniversityId = co.DepartmentId
-    -- use "where" for filtering out the data that you interested in or not.
+    -- use "where" for filtering out the data that you interested in or not
+    -- in "inner join". 
     where u.UniversityName = @UniversityName
     -- where u.UniversityName = 'Northland University' (use this without declare).
 
@@ -104,3 +105,14 @@ select count(1) from College;
 
 -- How many programs are there?
 select count(1) from Program;
+
+
+
+-- Lecture Sep 28: RelationalDB (watch the lecture)
+select u.UniversityName, c.CollegeName
+
+from University u
+    left join College c on u.UniversityId = c.UniversityId 
+    -- use "and" rather than "where" for filtering out the data that you 
+    -- interested in or not in "left join".
+                        and u.UniversityName = 'Northland University' 
