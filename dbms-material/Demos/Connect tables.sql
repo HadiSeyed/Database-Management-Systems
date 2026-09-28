@@ -108,6 +108,7 @@ select count(1) from Program;
 
 
 
+
 -- Lecture Sep 28: RelationalDB (watch the lecture)
 select u.UniversityName, c.CollegeName
 
