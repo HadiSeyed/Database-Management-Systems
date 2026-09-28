@@ -72,6 +72,7 @@ from University u
     --                         d.DepartmentId = co.DepartmentId and 
     --                         c.CollegeId = co.CollegeId and 
     --                         u.UniversityId = co.DepartmentId
+    -- use "where" for filtering out the data that you interested in or not.
     where u.UniversityName = @UniversityName
     -- where u.UniversityName = 'Northland University' (use this without declare).
 
