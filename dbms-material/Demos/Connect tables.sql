@@ -92,6 +92,7 @@ from University u
 -- have to include all the tables that are in the "inner joins", and then 
 -- you also need to make sure that you're joining from every table to every
 -- table the way that it's set up. 
+ 
 
 -- Sanity check: 
 -- I just want to know how many records that are in College table.
