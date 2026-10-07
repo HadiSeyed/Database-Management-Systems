@@ -211,17 +211,19 @@ LEFT JOIN Departments d
 ## Filtiring ON vs WHERE:
 ## 1.In DocumentDB we're using; 
 ## WHERE JSON_VALUE(Document, '$.universityName') = 'Riverside University' 
-##    AND/OR
+##    AND/OR/NOT
 ##       JSON_VALUE(Document, '$.collegeName') = 'College of Engineering'
 
 ## 2.In RelationalDB;
 ## A.Inner Join;
-## WHERE UniversityName = 'Northland University' AND/OR
+## WHERE UniversityName = 'Northland University' AND/OR/NOT
 ## WHERE collegeName = 'College of Education'
-## B.Left Join; we need to do the filtering on the Left Join itself not 
-## using WHERE clause. 
-## AND d.department_name = 'Engineering'
-## AND d.program_name = 'Data Science'
+## B.Left/Right Join; we need to do the filtering on the Left/Right Join 
+## itself not using WHERE clause. 
+## LEFT JOIN Departments d
+##    ON e.department_id = d.id
+##    AND d.department_name = 'Engineering';
+##    AND d.program_name = 'Data Science'
 ---
 
 # 10. Physical Join Algorithms (SQL Server Internals)

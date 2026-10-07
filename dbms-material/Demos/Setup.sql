@@ -84,7 +84,7 @@ FROM Employees e
 
 SELECT *
 FROM Departments d
-
+-- change some value to "Null".
 update Employees
 set department_id = null
 where id in (7,14, 21, 28, 34);
@@ -107,11 +107,14 @@ RIGHT JOIN Departments d
     ON e.department_id = d.id -- and e.name is null 
 WHERE e.name is null 
 -- WHERE e.id is null 
--- WHERE e.id is null 
+-- WHERE e.id is null   
+-- We can't use alias (e.name as EmployeeName) in the "WHERE" because "WHERE" 
+-- happens before "SELECT". We're going to filter before there is a "SELECT".
 
 SELECT d.department_name as DepartmentName
 FROM Departments d
 ORDER BY DepartmentName
+-- "ORDER BY" operation happens after "SELECT".
 
 INSERT INTO dbo.Departments (id, department_name) VALUES
 (11, 'Entertainment')
