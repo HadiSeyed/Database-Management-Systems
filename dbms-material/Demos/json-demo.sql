@@ -31,7 +31,8 @@ from OpenJson (@JsonDocument, '$.colleges')
 select c.value
 from dbo.UniversityCollection u
 -- I want a list of all colleges for all universities. In order to do that, we
--- can use the cross apply on the OpenJson.
+-- can use the cross apply on the OpenJson. For every item that was in that list,
+-- we're going to have a row returned in our result set.
 CROSS APPLY OpenJson (u.Document, '$.colleges') as c
 
 -- convert the list of college JSON objects. harvest out the college name on 

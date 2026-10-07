@@ -41,6 +41,13 @@ A join does **not** merge tables; it produces a *virtual result set* based on ma
 # 3. INNER JOIN  
 ### Only rows with matching keys appear.
 
+## The data we're only going to retrieve rows back a combination of
+## employees and departments, but where the employee department id 
+## equals to department department id. If the employee does not have 
+## a department id, they're not going to show up because there is no
+## department id specified. There is an employee at least one employee
+## and one department that have shared department id. That's the inner join. 
+
 ```sql
 SELECT e.name, d.department_name
 FROM Employees e
@@ -201,7 +208,20 @@ LEFT JOIN Departments d
     ON e.department_id = d.id
     AND d.department_name = 'Engineering';
 ```
+## Filtiring ON vs WHERE:
+## 1.In DocumentDB we're using; 
+## WHERE JSON_VALUE(Document, '$.universityName') = 'Riverside University' 
+##    AND/OR
+##       JSON_VALUE(Document, '$.collegeName') = 'College of Engineering'
 
+## 2.In RelationalDB;
+## A.Inner Join;
+## WHERE UniversityName = 'Northland University' AND/OR
+## WHERE collegeName = 'College of Education'
+## B.Left Join; we need to do the filtering on the Left Join itself not 
+## using WHERE clause. 
+## AND d.department_name = 'Engineering'
+## AND d.program_name = 'Data Science'
 ---
 
 # 10. Physical Join Algorithms (SQL Server Internals)

@@ -134,6 +134,10 @@ The optimizer considers:
 - Memory grant availability  
 - Parallelism opportunities  
 
+## Table size could be the total number of records that are in the table.
+## Estimated row counts going to be the estimated number of rows being 
+## returned. and how they know how many rows are going to be returned.
+ 
 Students should understand:  
 > The optimizer chooses the fastest algorithm to produce the rows required by the join type.
 

@@ -109,7 +109,7 @@ select count(1) from Program;
 
 
 
--- Lecture Sep 28: RelationalDB (watch the lecture)
+-- Lecture Sep 28: RelationalDB
 select u.UniversityName, c.CollegeName
 
 from University u
@@ -117,3 +117,18 @@ from University u
     -- use "and" rather than "where" for filtering out the data that you 
     -- interested in or not in "left join".
                         and u.UniversityName = 'Northland University' 
+
+
+-- Filtiring ON (AND) vs WHERE:
+-- 1.In DocumentDB we're using; 
+-- WHERE JSON_VALUE(Document, '$.universityName') = 'Riverside University' AND/OR
+--       JSON_VALUE(Document, '$.collegeName') = 'College of Engineering'
+
+-- 2.In RelationalDB;
+-- A.Inner Join;
+-- WHERE UniversityName = 'Northland University' AND/OR
+-- WHERE collegeName = 'College of Education'
+-- B.Left Join; we need to do the filtering on the Left Join itself not 
+-- using WHERE clause. 
+-- AND d.department_name = 'Engineering'
+-- AND d.program_name = 'Data Science'
