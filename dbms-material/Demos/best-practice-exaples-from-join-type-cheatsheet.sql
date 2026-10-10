@@ -22,6 +22,10 @@ GO
 USE JoinTypeExamples_ManyToMany;
 GO
 
+-- Identity(1,1): It's a unique auto number. What number I want it to start
+-- at on, and then I want it to increment bias. So if I want to increment
+-- by in a row numbers (1,2,3,...), I can do that.
+-- When I insert the department_name, it'll automatically give it a department_id   
 CREATE TABLE dbo.Departments (
     department_id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
     department_name varchar(50) NOT NULL
@@ -43,7 +47,9 @@ CREATE TABLE dbo.Projects (
     --     FOREIGN KEY (department_id) REFERENCES dbo.Departments(id)
 );
 
--- We're using the existing employee_id in Employees table.
+-- We would need to use the employee_id that employee has from the Employees 
+-- table. So we're not creating an employee_id here. We're using the existing 
+-- employee_id from the Employees table. Same explanation for department_id.
 CREATE TABLE dbo.EmployeeInDepartments (
     employee_id int NOT NULL,
     department_id int NOT NULL,
@@ -59,7 +65,7 @@ CREATE TABLE dbo.EmployeeInProjects (
     employee_id int NOT NULL,
     project_id int NOT NULL,
     role_name varchar(50) NOT NULL,
-    PRIMARY KEY (employee_id, project_id),
+    PRIMARY KEY (employee_id, project_id)
     -- CONSTRAINT FK_EmployeeProject_Employees
     --     FOREIGN KEY (employee_id) REFERENCES dbo.Employees(id),
     -- CONSTRAINT FK_EmployeeProject_Projects
@@ -82,10 +88,12 @@ INSERT INTO dbo.Departments (department_name) VALUES
 -- -- To make sure we inserted the above data correctly.
 -- SELECT * FROM Departments
 
--- -- Delete some records 
+-- Delete some records. I want to delete all the records where the 
+-- department_name is ... or some other department_name. 
 -- DELETE from Departments WHERE department_name = 'Marketing' OR 
 --                               department_name = 'Operations'
 
+-- Instead of executing DELETE statement, let's do a SELECT as a sanity check.
 -- SELECT * FROM Departments
 -- WHERE department_name = 'Marketing' OR department_name = 'Operations'
 
