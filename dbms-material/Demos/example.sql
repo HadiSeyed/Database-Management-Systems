@@ -23,8 +23,10 @@ WHERE u.UniversityName = 'University 042' AND
       d.DepartmentName = 'Department 042-01-03' AND
       p.programName = 'Program 042-01-03-02'
 ORDER BY University
--- -- We cannot use the alias in "Where" because it happens before "Select",
--- -- but we can use it in "Order" because it happens after "Select".
+-- -- We cannot use the alias (e.name as EmployeeName) in "Where" because it 
+-- -- happens before "Select". We're going to filter before there is a "Select".
+-- -- It's not possible, but we can use the alias in "Order" because it 
+-- -- happens after "Select".
 
 -- WHERE u.UniversityId = 42 AND
 --       d.DepartmentId = 2

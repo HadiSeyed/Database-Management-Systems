@@ -129,10 +129,10 @@ from University u
 -- WHERE UniversityName = 'Northland University' AND/OR/NOT
 -- WHERE collegeName = 'College of Education'
 -- B.Left/Right Join; we need to do the filtering on the Left/Right Join 
--- itself not using WHERE clause. 
+-- itself (using AND/OR), but we're still using WHERE clause. 
 -- LEFT JOIN Departments d
 --    ON e.department_id = d.id
---    AND d.department_name = 'Engineering';
---    AND d.program_name = 'Data Science'
+--    WHERE/AND/OR d.department_name = 'Engineering';
+--    WHERE/AND/OR d.program_name = 'Data Science'
 
 

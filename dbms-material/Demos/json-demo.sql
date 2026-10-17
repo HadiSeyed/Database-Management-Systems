@@ -4,7 +4,7 @@
 -- -- Change the database (location): (switch databases):
 -- 1. change database totally: 
 -- use the button at the top right or in the bottom right to switch it.
--- 2. change only in that script:
+-- 2. change only in that script, run the following:
 -- use YourDatabaseName;
 -- Go
 

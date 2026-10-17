@@ -4,7 +4,7 @@
 -- -- Change the database (location): (switch databases):
 -- 1. change database totally: 
 -- use the button at the top right or in the bottom right to switch it.
--- 2. change only in that script:
+-- 2. change only in that script, run the following:
 -- use YourDatabaseName;
 -- Go
 
@@ -35,6 +35,7 @@ GO
 select top 10 * 
 from University;
 GO
+-- right click on the table and "select top 1000" to show first 1000 row.
 
 -- Write "from" command first to see all columns in your University table 
 -- (list of fields) when you write a query in "select" command. 
