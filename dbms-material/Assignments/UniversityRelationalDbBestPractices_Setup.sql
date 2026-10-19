@@ -77,6 +77,9 @@ CREATE TABLE dbo.CollegeInUniversities
     PRIMARY KEY (CollegeId, UniversityId)
 );
 GO
+-- -- These two columns together make the primary key for this table. So we
+-- -- can't have one column by themselves cannot uniquely identify the table.
+-- -- So it takes the combination of the two for the primary key.
 
 CREATE TABLE dbo.DepartmentInColleges
 (

@@ -63,3 +63,5 @@ erDiagram
   primary key.
 - No direct relationship between `Projects` and `Departments` is shown because
   `Projects.department_id` is commented out and is not an actual column.
+
+## ERD: Entity Relationship Diagram: It's a diagram to show you how tables are related.

@@ -6,6 +6,7 @@ FROM
     INNER JOIN CollegeInUniversities cin on cin.UniversityId = u.UniversityId
     INNER JOIN Colleges c on cin.CollegeId = c.CollegeId
 WHERE u.UniversityId = 42
+-- -- What colleges belong to university 42.
 
 
 SELECT u.UniversityName as University, d.DepartmentId, d.DepartmentName, p.ProgramName, co.CourseName 
