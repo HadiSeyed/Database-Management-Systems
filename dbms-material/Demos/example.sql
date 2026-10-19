@@ -31,3 +31,15 @@ ORDER BY University
 
 -- WHERE u.UniversityId = 42 AND
 --       d.DepartmentId = 2
+
+
+-- -- Tip: 
+-- -- Based on "sql-statement-anatomy.md" file, we have to use SQL statements
+-- -- in order not out of order because it won't parse, it's wrong SQL.
+-- -- This is the order you write and read: SELECT, FROM, JOIN...ON, WHERE, 
+-- -- GROUP BY, HAVING, ORDER BY, TOP/OFSET-FETCH.
+-- -- SQL Server conceptually processes a SELECT statement in this order:
+-- -- FROM, ON, JOIN, WHERE, GROUP BY, HAVING, SELECT, ORDER BY.
+-- -- This is how we describe how the data that we want.
+
+-- -- check boolean operators and/or/not in "sql-statement-anatomy.md" file.

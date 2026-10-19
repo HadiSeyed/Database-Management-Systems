@@ -22,6 +22,7 @@ FROM dbo.UniversityCollection
 ORDER BY UniversityName ASC
 -- -- DESC: sorts university names in (Z–A) or from the most to the fewest.
 -- -- ASC: sorts university names in (A–Z) or from the fewest to the most.
+-- -- ORDER BY: by defult it's going to be ascending.
 
 -- -- Can we use the following? No, we need to define alias for Cross Apply.
 -- SELECT
