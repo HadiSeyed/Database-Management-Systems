@@ -108,10 +108,10 @@ RIGHT JOIN Departments d
 WHERE e.name is null 
 -- WHERE e.id is null 
 -- WHERE e.id is null   
--- -- We cannot use the alias (e.name as EmployeeName) in "Where" because it 
--- -- happens before "Select". We're going to filter before there is a "Select".
--- -- It's not possible, but we can use the alias in "Order" because it 
--- -- happens after "Select".
+-- -- We cannot use the alias (e.name as EmployeeName) in "Where" and "Having"
+-- -- because it happens before "Select". We're going to filter before there 
+-- -- is a "Select". It's not possible, but we can use the alias in "Order" 
+-- -- because it happens after "Select".
 
 SELECT d.department_name as DepartmentName
 FROM Departments d

@@ -1,5 +1,5 @@
 
-
+-- -- Lecture Oct 14, 2026
 SELECT u.UniversityName, c.CollegeName 
 FROM
     dbo.Universities u
@@ -24,10 +24,10 @@ WHERE u.UniversityName = 'University 042' AND
       d.DepartmentName = 'Department 042-01-03' AND
       p.programName = 'Program 042-01-03-02'
 ORDER BY University
--- -- We cannot use the alias (e.name as EmployeeName) in "Where" because it 
--- -- happens before "Select". We're going to filter before there is a "Select".
--- -- It's not possible, but we can use the alias in "Order" because it 
--- -- happens after "Select".
+-- -- We cannot use the alias (e.name as EmployeeName) in "Where" and "Having"
+-- -- because it happens before "Select". We're going to filter before there 
+-- -- is a "Select". It's not possible, but we can use the alias in "Order" 
+-- -- because it happens after "Select".
 
 -- WHERE u.UniversityId = 42 AND
 --       d.DepartmentId = 2
@@ -43,3 +43,40 @@ ORDER BY University
 -- -- This is how we describe how the data that we want.
 
 -- -- check order of boolean operators not/and/or in "sql-statement-anatomy.md" file.
+
+
+
+-- -- Lecture Oct 19, 2026
+SELECT d.DepartmentName, d.ChairName
+FROM Departments d  
+
+select u.UniversityName, count(c.CollegeId) as college_count
+From Universities U 
+    inner join CollegeInUniversities ciu on ciu.UniversityId = u.UniversityId
+    inner join Colleges c on ciu.CollegeId = c.CollegeId 
+-- -- we cannot use "count" inside the "where".
+-- where count(c.CollegeId) > 4
+Group By u.UniversityName
+Having count(c.CollegeId) > 4
+-- -- we cannot use alias in "having" like "Where" because it happens before "select"
+-- Having college_count
+
+CREATE TABLE BadExampleTable (
+    "my id" int, 
+    "tom & jerry" varchar(50)
+)
+
+CREATE TABLE BadExampleTable2 (
+    "my id" int, 
+    "tom & jerry" varchar(50),
+    "select" varchar(50)
+)
+
+insert into BadExampleTable ([my id]) values (123)
+
+select [my id] as my_id, ('brian' + ' ' + 'dietrick') as full_name
+from BadExampleTable
+where [my id]  = 123
+
+select [select] 
+from BadExampleTable2
