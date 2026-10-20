@@ -42,7 +42,7 @@ ORDER BY University
 -- -- FROM, ON, JOIN, WHERE, GROUP BY, HAVING, SELECT, ORDER BY.
 -- -- This is how we describe how the data that we want.
 
--- -- check order of boolean operators not/and/or in "sql-statement-anatomy.md" file.
+-- -- check order of three boolean operators not/and/or in "sql-statement-anatomy.md" file.
 
 
 
