@@ -46,7 +46,7 @@ ORDER BY University
 
 
 
--- -- Lecture Oct 19, 2026
+-- -- Lecture Oct 19, 2026, don't run it.
 SELECT d.DepartmentName, d.ChairName
 FROM Departments d  
 
