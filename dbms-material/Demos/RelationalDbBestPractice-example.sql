@@ -80,3 +80,21 @@ where [my id]  = 123
 
 select [select] 
 from BadExampleTable2
+
+
+-- -- Lecture Oct 21, 2026
+
+-- -- use a database inside another one: (no switch database):
+-- For instance, we are in "master" database. In the following example, it uses 
+-- "UniversityRelationalDbBestPractice" database inside the "master" database.
+-- SELECT
+--       [CourseCode]
+--       ,[CourseName]
+--   FROM [UniversityRelationalDbBestPractice].[dbo].[Courses]
+
+-- -- Change the database (location): (switch databases):
+-- 1. change database totally: 
+-- use the button at the top left or at the bottom right to switch it.
+-- 2. change only in that script, run the following:
+-- use YourDatabaseName;
+-- Go

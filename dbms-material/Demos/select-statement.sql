@@ -3,10 +3,18 @@
 
 -- -- Change the database (location): (switch databases):
 -- 1. change database totally: 
--- use the button at the top right or in the bottom right to switch it.
+-- use the button at the top left or in the bottom right to switch it.
 -- 2. change only in that script, run the following:
 -- use YourDatabaseName;
 -- Go
+-- -- use a database inside another one: (no switch database):
+-- For instance, we are in "master" database. In the following example, it uses 
+-- "UniversityRelationalDbBestPractice" database inside the "master" database.
+-- SELECT
+--       [CourseCode]
+--       ,[CourseName]
+--   FROM [UniversityRelationalDbBestPractice].[dbo].[Courses]
+
 
 -- There are three ways that give your valuable a value 
 -- by declare @name, select @result, and set @name.
