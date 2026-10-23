@@ -29,7 +29,9 @@ select @result = (5 + 3);
 -- Showing it's truly did evaluate this, assign it to the variable
 print @result
 
-
+-- -- varchar(50): anything bigger than 50 is a waste because we can't store
+-- -- anything bigger than 50 characters. This is the size of this parameter
+-- -- or variable that we want to use. 
 declare @name varchar(50) = 'Brian Dietrick';
 
 set @name = 'Brian Dietrick';

@@ -171,6 +171,7 @@ GO
 ```
 
 ### Create a unique index
+-- -- every single value has to be unique, kind of like a primary key.
 ```sql
 CREATE UNIQUE INDEX UX_Customers_Email
 ON dbo.Customers (Email);
