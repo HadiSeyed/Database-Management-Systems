@@ -166,7 +166,8 @@ WHERE JSON_VALUE(Document, '$.universityName') = 'Northland University' and
       JSON_VALUE(p.value, '$.programName') = 'B.S. in Computer Science'
 
 -- Task 11: List all universities that offer a program delivered by hybrid or online methods.(Requires CROSSAPPLY )
--- -- "DISTINCT": removes duplicate university names.
+-- -- "DISTINCT": removes duplicate university names. Brings back only unique
+-- -- values, so I'm going to get a list of all the possible that are there.
 SELECT DISTINCT
     JSON_VALUE(Document, '$.universityName') AS UniversityName
 FROM dbo.UniversityCollection
