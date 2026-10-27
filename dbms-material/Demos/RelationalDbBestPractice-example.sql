@@ -87,6 +87,7 @@ from BadExampleTable2
 -- -- use a database inside another one: (no switch database):
 -- For instance, we are in "master" database. In the following example, it uses 
 -- "UniversityRelationalDbBestPractice" database inside the "master" database.
+-- dbo: 
 -- SELECT
 --       [CourseCode]
 --       ,[CourseName]
