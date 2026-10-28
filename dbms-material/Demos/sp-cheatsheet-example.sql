@@ -27,6 +27,8 @@ GO
 
 
 -- 2. Create a basic procedure
+-- Use `CREATE OR ALTER PROCEDURE` to create a procedure the first time and 
+-- -- update it on later runs:
 CREATE OR ALTER PROCEDURE dbo.usp_GetStudents
 AS
 BEGIN
@@ -45,6 +47,8 @@ EXEC usp_GetStudents
 Go
 
 -- -- 4. Add input parameters
+-- -- Parameters let the caller provide values. Declare each parameter with a 
+-- -- name and a SQL data type:
 CREATE OR ALTER PROCEDURE dbo.usp_GetStudentsByMajor
     @Major NVARCHAR(100)
 AS
@@ -69,6 +73,8 @@ EXEC dbo.usp_GetStudentsByMajor @Major = N'Mathematics';
 GO
 
 -- -- 5. Use an optional parameter
+-- -- Give a parameter a default value to make it optional. This example 
+-- -- returns all students when `@Major` is omitted or set to `NULL`:
 CREATE OR ALTER PROCEDURE dbo.usp_SearchStudents
     @Major NVARCHAR(100) = NULL
     -- @Major NVARCHAR(100) = N'Mathematics'
@@ -90,6 +96,7 @@ EXEC dbo.usp_SearchStudents @Major = N'Mathematics';
 GO
 
 -- -- 6. Insert and update rows
+-- -- An insert procedure can return the new row's identity value as a result set:
 CREATE OR ALTER PROCEDURE dbo.usp_AddStudent
     @FirstName NVARCHAR(50),
     @LastName NVARCHAR(50),
@@ -110,3 +117,158 @@ EXEC dbo.usp_AddStudent
     @FirstName = N'Barbara',
     @LastName = N'Liskov',
     @Major = N'Computer Science';
+GO
+
+-- -- Lecture Oct 28, 2026
+SELECT * FROM dbo.Students;
+GO
+
+-- -- Use a key in an update procedure's `WHERE` clause so the intended row 
+-- -- is changed:
+CREATE OR ALTER PROCEDURE dbo.usp_UpdateStudentMajor
+    @StudentID INT,
+    @Major NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.Students
+    SET Major = @Major
+    WHERE StudentID = @StudentID;
+END;
+GO
+
+EXEC dbo.usp_UpdateStudentMajor
+    @StudentID = 1,
+    @Major = N'Mathematics';
+GO
+
+-- -- 7. Return an output parameter
+-- -- Use an `OUTPUT` parameter when the procedure needs to give back a single 
+-- -- value in addition to any result sets:
+CREATE OR ALTER PROCEDURE dbo.usp_GetStudentCount
+    @StudentCount INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT @StudentCount = COUNT(*)
+    FROM dbo.Students;
+END;
+GO
+
+-- -- Declare a variable to receive it. `OUTPUT` must appear in the call as well:
+DECLARE @Count INT;
+
+EXEC dbo.usp_GetStudentCount
+    @StudentCount = @Count OUTPUT;
+
+PRINT @Count
+SELECT @Count AS StudentCount;
+GO
+
+-- -- Result sets, output parameters, and `RETURN`
+-- -- For example, capture an integer return status like this:
+DECLARE @Status INT;
+
+EXEC @Status = dbo.usp_GetStudents;
+
+PRINT @Status
+SELECT @Status AS ReturnStatus;
+GO
+
+-- -- 8. Change or remove a procedure
+-- -- Run the `CREATE OR ALTER PROCEDURE` definition again to update the 
+-- -- procedure. To remove it:
+DROP PROCEDURE IF EXISTS dbo.usp_GetStudents;
+GO
+
+-- -- 9. Advanced topics
+-- -- Error handling and transactions
+-- -- Use a transaction when a group of changes must succeed or fail together.
+-- -- `TRY...CATCH` handles an error, and `THROW` re-raises it so the caller 
+-- -- knows the operation failed:
+
+SELECT * FROM Students WHERE StudentID = 1
+BEGIN TRANSACTION
+UPDATE Students SET Major = 'Nursing' WHERE StudentID = 1
+SELECT * FROM Students WHERE StudentID = 1
+ROLLBACK TRANSACTION
+-- COMMIT TRANSACTION
+SELECT * FROM Students WHERE StudentID = 1;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.usp_AddStudentWithTransaction
+    @FirstName NVARCHAR(50),
+    @LastName NVARCHAR(50),
+    @Major NVARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO dbo.Students (FirstName, LastName, Major)
+        VALUES (@FirstName, @LastName, @Major);
+
+        DECLARE @StudentID INT
+        SET @StudentID = (SELECT CONVERT(INT, SCOPE_IDENTITY()))
+
+        -- RAISERROR('Failed 123', 16, 1) 
+
+        UPDATE Students
+        SET FirstName = FirstName + ' is awesome'
+        WHERE StudentID = @StudentID
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH;
+END;
+GO
+
+EXEC usp_AddStudentWithTransaction
+    @FirstName = "Maysun",
+    @LastName = "Weeks",
+    @Major = "Computer Science"
+GO
+
+EXEC usp_AddStudentWithTransaction
+    @FirstName = "Erika",
+    @LastName = "Macleman",
+    @Major = "Software Engineering"
+GO
+-- -- Parameterized dynamic SQL
+-- -- Most queries do not need dynamic SQL. If a query must be built at 
+-- -- runtime, pass data values as parameters to `sys.sp_executesql`; do not 
+-- -- concatenate user input into the SQL text:
+CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic
+    @Major NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Sql NVARCHAR(MAX) =
+        N'SELECT StudentID, FirstName, LastName, Major
+          FROM dbo.Students
+          WHERE Major = @Major;';
+
+    EXEC sys.sp_executesql
+        @Sql,
+        N'@Major NVARCHAR(100)',
+        @Major = @Major;
+END;
+GO
+
+-- -- Limit who can execute a procedure
+-- -- Grant only the permissions users need. Replace `[StudentReader]` with 
+-- -- an existing database user or role:
+GRANT EXECUTE ON OBJECT::dbo.usp_GetStudents TO [StudentReader];
+
+-- -- 10. Common mistakes to avoid
