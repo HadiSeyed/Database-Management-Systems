@@ -2,6 +2,9 @@
 -- -- Lecture Oct 26, 2026
 -- -- example copied from "SQL Server Stored Procedures Cheatsheet".
 
+USE master;
+GO
+
 CREATE DATABASE StoredProcDB
 GO
 
@@ -89,7 +92,7 @@ BEGIN
 
     SELECT StudentID, FirstName, LastName, Major
     FROM dbo.Students
-    WHERE @Major IS NULL OR Major = @Major -- evalute to true or false
+    WHERE @Major IS NULL OR Major = @Major -- to evalute to true or false
     ORDER BY LastName, FirstName;
 END;
 GO
@@ -112,24 +115,41 @@ BEGIN
 
     INSERT INTO dbo.Students (FirstName, LastName, Major)
     VALUES (@FirstName, @LastName, @Major);
-
+    
     SELECT CONVERT(INT, SCOPE_IDENTITY()) AS StudentID;
 END;
 GO
 
 -- SELECT SCOPE_IDENTITY()
+
 EXEC dbo.usp_AddStudent
     @FirstName = N'Barbara',
     @LastName = N'Liskov',
     @Major = N'Computer Science';
 GO
 
+EXEC dbo.usp_AddStudent
+    @FirstName = 'Brandi',
+    @LastName = 'Dietrick'
+GO
+-- -- SELECT CONVERT(INT, SCOPE_IDENTITY()):
+-- -- convert whatever this data type (SCOPE_IDENTITY()) is here to an integer
+-- -- because an integer is specifically the data type that the "Identity" is.
+
+
 -- -- Lecture Oct 28, 2026
 SELECT * FROM dbo.Students;
 GO
 
+-- -- to remove procedure (we created procedure in master database).
+-- -- you would have to be in the database that the stored procedure is in 
+-- -- that you're trying to delete. if you don't have it, you are in wrong DB.
+-- DROP PROCEDURE dbo.usp_UpdateStudentMajor;
+-- GO
+
 -- -- Use a key in an update procedure's `WHERE` clause so the intended row 
--- -- is changed:
+-- -- is changed: we're doing an update. so, we're changing an existing record
+-- -- to something else.
 CREATE OR ALTER PROCEDURE dbo.usp_UpdateStudentMajor
     @StudentID INT,
     @Major NVARCHAR(100)
@@ -172,7 +192,8 @@ PRINT @Count
 SELECT @Count AS StudentCount;
 GO
 
--- -- Result sets, output parameters, and `RETURN`
+-- -- this is a different way to retrieve a value or pass information out of a Stored Procedure.
+-- -- Result sets, output parameters, and `RETURN`.
 -- -- For example, capture an integer return status like this:
 DECLARE @Status INT;
 
@@ -181,6 +202,7 @@ EXEC @Status = dbo.usp_GetStudents;
 PRINT @Status
 SELECT @Status AS ReturnStatus;
 GO
+-- -- right click on 'Stored Procedures' to see different functions of script.
 
 -- -- 8. Change or remove a procedure
 -- -- Run the `CREATE OR ALTER PROCEDURE` definition again to update the 
