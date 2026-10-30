@@ -2,13 +2,17 @@
 -- -- Lecture Oct 26, 2026
 -- -- example copied from "SQL Server Stored Procedures Cheatsheet".
 
--- -- 1. Example table
 CREATE DATABASE StoredProcDB
 GO
+
+-- -- to remove database
+-- DROP DATABASE StoredProcDB
+-- GO
 
 USE StoredProcDB
 GO
 
+-- -- 1. Example table
 CREATE TABLE dbo.Students (
     StudentID INT IDENTITY(1,1) PRIMARY KEY,
     FirstName NVARCHAR(50) NOT NULL,
@@ -23,16 +27,17 @@ VALUES
     (N'Grace', N'Hopper', N'Computer Science'),
     (N'Katherine', N'Johnson', N'Mathematics');
 GO
--- -- press f1 to see databases.
+-- -- press f1 to see command pallet (what databases are available).
 
 
 -- 2. Create a basic procedure
 -- Use `CREATE OR ALTER PROCEDURE` to create a procedure the first time and 
--- -- update it on later runs:
+-- update it on later runs: (create store procedure is like create a table)-
+-- (store procedure is part of database's schema like a table)
 CREATE OR ALTER PROCEDURE dbo.usp_GetStudents
 AS
 BEGIN
-    SET NOCOUNT ON;
+    SET NOCOUNT ON; -- do not bring back any counts.
 
     SELECT StudentID, FirstName, LastName, Major
     FROM dbo.Students
@@ -50,7 +55,7 @@ Go
 -- -- Parameters let the caller provide values. Declare each parameter with a 
 -- -- name and a SQL data type:
 CREATE OR ALTER PROCEDURE dbo.usp_GetStudentsByMajor
-    @Major NVARCHAR(100)
+    @Major NVARCHAR(100) -- name and data type (100: characters long) of the parameter.
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -66,7 +71,7 @@ GO
 EXEC dbo.usp_GetStudentsByMajor 'Computer Science';
 -- or
 EXEC dbo.usp_GetStudentsByMajor @Major = N'Computer Science';
-
+-- -- N: treat this string as a uni code.
 EXEC dbo.usp_GetStudentsByMajor N'Mathematics';
 -- or
 EXEC dbo.usp_GetStudentsByMajor @Major = N'Mathematics';
@@ -84,7 +89,7 @@ BEGIN
 
     SELECT StudentID, FirstName, LastName, Major
     FROM dbo.Students
-    WHERE @Major IS NULL OR Major = @Major
+    WHERE @Major IS NULL OR Major = @Major -- evalute to true or false
     ORDER BY LastName, FirstName;
 END;
 GO
