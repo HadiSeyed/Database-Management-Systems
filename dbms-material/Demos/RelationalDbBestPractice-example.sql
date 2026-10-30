@@ -87,11 +87,15 @@ from BadExampleTable2
 -- -- use a database inside another one: (no switch database):
 -- For instance, we are in "master" database. In the following example, it uses 
 -- "UniversityRelationalDbBestPractice" database inside the "master" database.
--- dbo: ? lecture Oct 26
 -- SELECT
 --       [CourseCode]
 --       ,[CourseName]
 --   FROM [UniversityRelationalDbBestPractice].[dbo].[Courses]
+
+-- dbo: this is the schema that the Courses table belongs to. 
+-- we are in the default schema. if we want to create this table in a 
+-- different schema that we're trying to isolate it, protect it, whatever, 
+-- then absolutely we'd have to specify it. but otherwise this is optional.
 
 -- -- Change the database (location): (switch databases):
 -- 1. change database totally: 

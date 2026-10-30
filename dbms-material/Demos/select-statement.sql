@@ -15,6 +15,11 @@
 --       ,[CourseName]
 --   FROM [UniversityRelationalDbBestPractice].[dbo].[Courses]
 
+-- dbo: this is the schema that the Courses table belongs to. 
+-- we are in the default schema. if we want to create this table in a 
+-- different schema that we're trying to isolate it, protect it, whatever, 
+-- then absolutely we'd have to specify it. but otherwise this is optional.
+
 
 -- There are three ways that give your valuable a value 
 -- by declare @name, select @result, and set @name.
