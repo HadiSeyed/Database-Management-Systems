@@ -216,6 +216,15 @@ GO
 -- -- `TRY...CATCH` handles an error, and `THROW` re-raises it so the caller 
 -- -- knows the operation failed:
 
+-- -- transaction means that it usually there is multiple pieces to the 
+-- -- operation you're trying to do. and if you're going to put it in a
+-- -- transaction it's because every single one of these pieces has to be
+-- -- successful or the whole thing is rolled back. like a bank account.
+
+-- -- Set: it's just a change the behavior of what you can/can't do or what 
+-- -- the result sets look like.
+
+-- -- How Transaction works?:
 SELECT * FROM Students WHERE StudentID = 1
 BEGIN TRANSACTION
 UPDATE Students SET Major = 'Nursing' WHERE StudentID = 1
@@ -231,10 +240,10 @@ CREATE OR ALTER PROCEDURE dbo.usp_AddStudentWithTransaction
     @Major NVARCHAR(100) = NULL
 AS
 BEGIN
-    SET NOCOUNT ON;
+    SET NOCOUNT ON; 
     -- SET XACT_ABORT ON;
 
-    BEGIN TRY
+    BEGIN TRY -- if you're going to do a Try, it has to either have a Catch.
         BEGIN TRANSACTION;
 
         INSERT INTO dbo.Students (FirstName, LastName, Major)
@@ -243,19 +252,19 @@ BEGIN
         DECLARE @StudentID INT
         SET @StudentID = (SELECT CONVERT(INT, SCOPE_IDENTITY()))
 
-        -- RAISERROR('Failed 123', 16, 1) 
+        -- RAISERROR('Failed 123', 16, 1) -- this will force it to fail.
 
         UPDATE Students
         SET FirstName = FirstName + ' is awesome'
         WHERE StudentID = @StudentID
 
-        COMMIT TRANSACTION;
+        COMMIT TRANSACTION; -- 
     END TRY
-    BEGIN CATCH
+    BEGIN CATCH -- the Catch only runs if there is an error.
         IF XACT_STATE() <> 0
-            ROLLBACK TRANSACTION;
+            ROLLBACK TRANSACTION; -- undo everything that we did that was a part of this transaction. 
 
-        THROW;
+        THROW; -- comment it out when you use Raiserror. if you use this along Raiserror, you will get the an error on purpose.
     END CATCH;
 END;
 GO
