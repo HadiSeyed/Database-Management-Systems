@@ -1,6 +1,6 @@
 
 -- -- Lecture Oct 26, 2026
--- -- example copied from "SQL Server Stored Procedures Cheatsheet".
+-- -- example copied from "SQL Server Stored Procedures Cheatsheet (sp-cheatseet.md)" .
 
 USE master;
 GO
