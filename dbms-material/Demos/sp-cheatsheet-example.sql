@@ -302,9 +302,94 @@ BEGIN
 END;
 GO
 
+EXEC usp_SearchStudentsDynamic @Major = 'Computer Science'
+Go
+
+
+CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic2
+    @Major NVARCHAR(100),
+    @FirstName NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Sql NVARCHAR(MAX) =
+        N'SELECT StudentID, FirstName, LastName, Major
+          FROM dbo.Students
+          WHERE Major = @Major; or FirstName = @FirstName' 
+
+    EXEC sys.sp_executesql
+        @Sql,
+        N'@Major NVARCHAR(100), @FirstName NVARCHAR(50)',
+        @Major = @Major,
+        @FirstName = @FirstName;
+END;
+GO
+
+
+EXEC usp_SearchStudentsDynamic2 @Major = 'Computer Science'
+Go
+
+CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic2
+    @Major NVARCHAR(100) = NULL,
+    @FirstName NVARCHAR(50) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Sql NVARCHAR(MAX) =
+        N'SELECT StudentID, FirstName, LastName, Major
+          FROM dbo.Students
+          WHERE (@Major is not null and Major = @Major) or 
+          (@FirstName is not null and FirstName = @FirstName);';
+
+    EXEC sys.sp_executesql
+        @Sql,
+        N'@Major NVARCHAR(100), @FirstName NVARCHAR(50)',
+        @Major = @Major,
+        @FirstName = @FirstName;
+END;
+GO
+
+
+EXEC usp_SearchStudentsDynamic2 @FirstName = 'Grace'
+Go
+
+CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic3
+    @Major NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Sql NVARCHAR(MAX) =
+        N'SELECT StudentID, FirstName, LastName, Major
+          FROM dbo.Students
+          WHERE Major = ''' + @Major + ''';';
+    -- WHERE Major = 'Computer Science';
+
+    EXEC (@Sql)
+END;
+GO
+
+
+EXEC usp_SearchStudentsDynamic3 @Major = 'Computer Science'
+Go
+
+DECLARE @value NVARCHAR(100);
+SET @value = '''; select * from logins; -- '
+EXEC usp_SearchStudentsDynamic3 @Major = @value
+Go
+
+SELECT StudentID, FirstName, LastName, Major
+FROM dgo.students
+WHERE Major = ''; select * from logins; -- ';
+
 -- -- Limit who can execute a procedure
 -- -- Grant only the permissions users need. Replace `[StudentReader]` with 
 -- -- an existing database user or role:
 GRANT EXECUTE ON OBJECT::dbo.usp_GetStudents TO [StudentReader];
+-- or 
+GRANT EXECUTE ON dbo.usp_GetStudents TO [StudentReader];
 
 -- -- 10. Common mistakes to avoid
+-- -- look at the 'sp-cheatsheet.md' file.
