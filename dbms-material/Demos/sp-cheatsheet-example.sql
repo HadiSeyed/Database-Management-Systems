@@ -241,9 +241,9 @@ CREATE OR ALTER PROCEDURE dbo.usp_AddStudentWithTransaction
 AS
 BEGIN
     SET NOCOUNT ON; 
-    -- SET XACT_ABORT ON;
+    -- SET XACT_ABORT ON; -- -- (TRANSACTION ABORT)
 
-    BEGIN TRY -- if you're going to do a Try, it has to either have a Catch.
+    BEGIN TRY -- if you're going to do a "TRY", it has to either have a "CATCH". If you have a "TRY", you're almost always going to have a "CATCH".
         BEGIN TRANSACTION;
 
         INSERT INTO dbo.Students (FirstName, LastName, Major)
@@ -258,7 +258,7 @@ BEGIN
         SET FirstName = FirstName + ' is awesome'
         WHERE StudentID = @StudentID
 
-        COMMIT TRANSACTION; -- 
+        COMMIT TRANSACTION; -- it'll officially become part of the database. it's committed at that point.
     END TRY
     BEGIN CATCH -- the Catch only runs if there is an error.
         IF XACT_STATE() <> 0
@@ -280,6 +280,9 @@ EXEC usp_AddStudentWithTransaction
     @LastName = "Macleman",
     @Major = "Software Engineering"
 GO
+
+-- -- Lecture Nov 2, 2026
+
 -- -- Parameterized dynamic SQL
 -- -- Most queries do not need dynamic SQL. If a query must be built at 
 -- -- runtime, pass data values as parameters to `sys.sp_executesql`; do not 
@@ -290,7 +293,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @Sql NVARCHAR(MAX) =
+    DECLARE @Sql NVARCHAR(MAX) = -- NVARCHAR(MAX): we don't know how big a string is going to be, how many characters, but we want to be able to be as flexible as possible. we want the "NVARCHAR" to be as big as "NVARCHAR" can be.
         N'SELECT StudentID, FirstName, LastName, Major
           FROM dbo.Students
           WHERE Major = @Major;';
@@ -306,29 +309,29 @@ EXEC usp_SearchStudentsDynamic @Major = 'Computer Science'
 Go
 
 
-CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic2
-    @Major NVARCHAR(100),
-    @FirstName NVARCHAR(50)
-AS
-BEGIN
-    SET NOCOUNT ON;
+-- CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic2
+--     @Major NVARCHAR(100),
+--     @FirstName NVARCHAR(50)
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
 
-    DECLARE @Sql NVARCHAR(MAX) =
-        N'SELECT StudentID, FirstName, LastName, Major
-          FROM dbo.Students
-          WHERE Major = @Major; or FirstName = @FirstName' 
+--     DECLARE @Sql NVARCHAR(MAX) =
+--         N'SELECT StudentID, FirstName, LastName, Major
+--           FROM dbo.Students
+--           WHERE Major = @Major; or FirstName = @FirstName'; 
 
-    EXEC sys.sp_executesql
-        @Sql,
-        N'@Major NVARCHAR(100), @FirstName NVARCHAR(50)',
-        @Major = @Major,
-        @FirstName = @FirstName;
-END;
-GO
+--     EXEC sys.sp_executesql
+--         @Sql,
+--         N'@Major NVARCHAR(100), @FirstName NVARCHAR(50)',
+--         @Major = @Major,
+--         @FirstName = @FirstName;
+-- END;
+-- GO
 
+-- EXEC usp_SearchStudentsDynamic2 @Major = 'Computer Science'
+-- Go
 
-EXEC usp_SearchStudentsDynamic2 @Major = 'Computer Science'
-Go
 
 CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic2
     @Major NVARCHAR(100) = NULL,
@@ -340,8 +343,8 @@ BEGIN
     DECLARE @Sql NVARCHAR(MAX) =
         N'SELECT StudentID, FirstName, LastName, Major
           FROM dbo.Students
-          WHERE (@Major is not null and Major = @Major) or 
-          (@FirstName is not null and FirstName = @FirstName);';
+          WHERE (@Major is not Null and Major = @Major) or 
+          (@FirstName is not Null and FirstName = @FirstName);';
 
     EXEC sys.sp_executesql
         @Sql,
@@ -351,9 +354,10 @@ BEGIN
 END;
 GO
 
-
+EXEC usp_SearchStudentsDynamic2 @Major = 'Computer Science'
 EXEC usp_SearchStudentsDynamic2 @FirstName = 'Grace'
 Go
+
 
 CREATE OR ALTER PROCEDURE dbo.usp_SearchStudentsDynamic3
     @Major NVARCHAR(100)
@@ -371,7 +375,6 @@ BEGIN
 END;
 GO
 
-
 EXEC usp_SearchStudentsDynamic3 @Major = 'Computer Science'
 Go
 
@@ -380,9 +383,9 @@ SET @value = '''; select * from logins; -- '
 EXEC usp_SearchStudentsDynamic3 @Major = @value
 Go
 
-SELECT StudentID, FirstName, LastName, Major
-FROM dgo.students
-WHERE Major = ''; select * from logins; -- ';
+-- SELECT StudentID, FirstName, LastName, Major
+-- FROM dbo.students
+-- WHERE Major = ''; select * from logins; -- ';
 
 -- -- Limit who can execute a procedure
 -- -- Grant only the permissions users need. Replace `[StudentReader]` with 
@@ -393,3 +396,9 @@ GRANT EXECUTE ON dbo.usp_GetStudents TO [StudentReader];
 
 -- -- 10. Common mistakes to avoid
 -- -- look at the 'sp-cheatsheet.md' file.
+
+
+-- -- "SQL Server Permissions Cheat Sheet" file:
+-- you never connect to a database with your "login". you connect to the server
+-- with your "login", but then you must have a database user, that is created 
+-- that allows you to connect to the database itself.

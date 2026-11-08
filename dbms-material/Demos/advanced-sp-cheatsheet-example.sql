@@ -1,7 +1,4 @@
 
--- -- Lecture Nov 2, 2026
-
-
 -- -- Lecture Nov 4, 2026
 -- -- example copied from "Advanced SQL Server Stored Procedures Cheatsheet (advanced-sp-cheatseet.md)"
 
