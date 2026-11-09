@@ -140,7 +140,8 @@ BEGIN
     FROM dbo.Students AS s
         INNER JOIN dbo.StudentsInDepartments AS sid ON s.StudentID = sid.StudentID
         INNER JOIN dbo.Departments AS d ON sid.DepartmentID = d.DepartmentID
-    WHERE sid.DepartmentID = @DepartmentID
+    -- WHERE sid.DepartmentID = @DepartmentID
+    WHERE d.DepartmentID = @DepartmentID
     ORDER BY s.LastName, s.FirstName;
 END;
 GO
@@ -149,6 +150,7 @@ GRANT EXECUTE ON OBJECT::dbo.usp_GetDepartmentRoster TO [AppReaderRole];
 
 
 EXEC dbo.usp_GetDepartmentRoster @DepartmentID = 1;
+EXEC dbo.usp_GetDepartmentRoster @DepartmentID = 2;
 GO
 
 -- -- 5. Performance stability patterns
