@@ -2,10 +2,10 @@
 -- -- Lecture Nov 4, 2026
 -- -- example copied from "Advanced SQL Server Stored Procedures Cheatsheet (advanced-sp-cheatseet.md)"
 
--- -- 1. Procedure contracts and input validation
 USE UniversityAdvancedSPBestPractice;
 Go
 
+-- -- 1. Procedure contracts and input validation
 CREATE OR ALTER PROCEDURE dbo.usp_UpdateStudentMajor
     @StudentID INT,
     @Major NVARCHAR(100),
@@ -32,16 +32,21 @@ BEGIN
 END;
 GO
 
-SELECT * FROM Students WHERE StudentID = 1;
-EXEC dbo.usp_UpdateStudentMajor @studentID = 1, @Major = 'Physics', @ChangedBy = 'Admin'
-EXEC dbo.usp_UpdateStudentMajor
-GO
+Select * from Students where StudentID = 1;
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = 'Physics', @ChangedBy = 'Admin';
+Select * from Students where StudentID = 1;
 
-EXEC dbo.usp_UpdateStudentMajor @StudentID = 1; 
-EXEC dbo.usp_UpdateStudentMajor @StudentID = 1;
-EXEC dbo.usp_UpdateStudentMajor @StudentID = 1;
-EXEC dbo.usp_UpdateStudentMajor @StudentID = 99;
+EXEC dbo.usp_UpdateStudentMajor @StudentID = null, @Major = 'Physics', @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 0, @Major = 'Physics', @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = '  ', @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = null, @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = 'Physics', @ChangedBy = null;
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 99, @Major = 'Physics', @ChangedBy = 'Admin';
 GO
+-- -- white space '  ' means that it's either a true a space on a keyboard space
+-- -- or it could be a tab or carriage return line feed. All of that stuff is 
+-- -- considered whites space. and so a trim either a right or left trim will 
+-- -- remove all that from what's there.
 
 -- -- 2. Transaction ownership patterns
 CREATE OR ALTER PROCEDURE dbo.usp_TransferAdvisor
@@ -56,7 +61,7 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        UPDATE dbo.Students
+        UPDATE StudentsOfAdvisors
         SET AdvisorID = @ToAdvisorID
         WHERE StudentID = @StudentID
           AND AdvisorID = @FromAdvisorID;
@@ -77,12 +82,12 @@ BEGIN
 END;
 GO
 
-SELECT * FROM StudentsOfAdvisors 
+select * from StudentsOfAdvisors where StudentID = 1;
+EXEC dbo.usp_TransferAdvisor @FromAdvisorID = 1, @ToAdvisorID = 2, @StudentID = 1;
+select * from StudentsOfAdvisors where StudentID = 1;
 
 
-GO
-
-EXEC dbo.usp_TransferAdvisor @FromAdvisorID = 
+EXEC dbo.usp_TransferAdvisor @FromAdvisorID = 999, @ToAdvisorID = 2, @StudentID = 1;
 GO
 
 -- -- 3. Error handling contracts
@@ -103,7 +108,7 @@ BEGIN
             THROW 50201, 'StudentID and CourseID are required.', 1;
 
         INSERT INTO dbo.Enrollments (Semester, StudentID, CourseID, EnrolledAtUtc)
-        VALUES (@Semester, @CourseID, SYSUTCDATETIME());
+        VALUES (@Semester, @StudentID, @CourseID, SYSUTCDATETIME());
     END TRY
     BEGIN CATCH
         SET @ResultCode = ERROR_NUMBER();
@@ -111,6 +116,16 @@ BEGIN
         THROW;
     END CATCH;
 END;
+GO
+
+DECLARE @ResultCode INT;
+DECLARE @ResultMessage NVARCHAR(4000);
+
+EXEC dbo.usp_EnrollStudent @Semester = 'Fall 2024', @StudentID = 1, @CourseID = 1, @ResultCode = @ResultCode OUTPUT, @ResultMessage = @ResultMessage OUTPUT;
+SELECT @ResultCode AS ResultCode, @ResultMessage AS ResultMessage;
+
+EXEC dbo.usp_EnrollStudent @Semester = null, @StudentID = 1, @CourseID = 1, @ResultCode = @ResultCode OUTPUT, @ResultMessage = @ResultMessage OUTPUT;
+SELECT @ResultCode AS ResultCode, @ResultMessage AS ResultMessage;
 GO
 
 -- -- 4. Security context and permission boundaries
@@ -123,9 +138,9 @@ BEGIN
 
     SELECT s.StudentID, s.FirstName, s.LastName
     FROM dbo.Students AS s
-        INNER JOIN dbo.StudentsInDepartments AS sid s.StudentID = sid.StudentID
-        INNER JOIN dbo.Departments AS d on sid.DepartmentID = d.DepartmentID
-    WHERE d.DepartmentID = @DepartmentID
+        INNER JOIN dbo.StudentsInDepartments AS sid ON s.StudentID = sid.StudentID
+        INNER JOIN dbo.Departments AS d ON sid.DepartmentID = d.DepartmentID
+    WHERE sid.DepartmentID = @DepartmentID
     ORDER BY s.LastName, s.FirstName;
 END;
 GO
@@ -133,7 +148,7 @@ GO
 GRANT EXECUTE ON OBJECT::dbo.usp_GetDepartmentRoster TO [AppReaderRole];
 
 
-
+EXEC dbo.usp_GetDepartmentRoster @DepartmentID = 1;
 GO
 
 -- -- 5. Performance stability patterns
