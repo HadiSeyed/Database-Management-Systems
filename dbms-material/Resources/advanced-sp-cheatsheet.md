@@ -46,6 +46,18 @@ BEGIN
         THROW 50004, 'Student not found.', 1;
 END;
 GO
+
+Select * from Students where StudentID = 1;
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = 'Physics', @ChangedBy = 'Admin';
+Select * from Students where StudentID = 1;
+
+EXEC dbo.usp_UpdateStudentMajor @StudentID = null, @Major = 'Physics', @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 0, @Major = 'Physics', @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = '  ', @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = null, @ChangedBy = 'Admin';
+EXEC dbo.usp_UpdateStudentMajor @StudentID = 1, @Major = 'Physics', @ChangedBy = null;
+
+GO
 ```
 
 ### Common failure mode
@@ -82,7 +94,7 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        UPDATE dbo.Students
+        UPDATE StudentsOfAdvisors
         SET AdvisorID = @ToAdvisorID
         WHERE StudentID = @StudentID
           AND AdvisorID = @FromAdvisorID;
@@ -101,6 +113,15 @@ BEGIN
         THROW;
     END CATCH;
 END;
+GO
+
+select * from StudentsOfAdvisors where StudentID = 1;
+EXEC dbo.usp_TransferAdvisor @FromAdvisorID = 1, @ToAdvisorID = 2, @StudentID = 1;
+select * from StudentsOfAdvisors where StudentID = 1;
+
+
+EXEC dbo.usp_TransferAdvisor @FromAdvisorID = 999, @ToAdvisorID = 2, @StudentID = 1;
+
 GO
 ```
 
@@ -128,7 +149,6 @@ when messages change.
 ### Recommended template
 ```sql
 CREATE OR ALTER PROCEDURE dbo.usp_EnrollStudent
-    @Semester NVARCHAR(50),
     @StudentID INT,
     @CourseID INT,
     @ResultCode INT OUTPUT,
@@ -143,8 +163,8 @@ BEGIN
         IF @StudentID IS NULL OR @CourseID IS NULL
             THROW 50201, 'StudentID and CourseID are required.', 1;
 
-        INSERT INTO dbo.Enrollments (Semester, StudentID, CourseID, EnrolledAtUtc)
-        VALUES (@Semester, @StudentID, @CourseID, SYSUTCDATETIME());
+        INSERT INTO dbo.Enrollments (StudentID, CourseID, EnrolledAtUtc)
+        VALUES (@StudentID, @CourseID, SYSUTCDATETIME());
     END TRY
     BEGIN CATCH
         SET @ResultCode = ERROR_NUMBER();
@@ -185,12 +205,19 @@ BEGIN
 
     SELECT s.StudentID, s.FirstName, s.LastName
     FROM dbo.Students AS s
-    WHERE s.DepartmentID = @DepartmentID
+        INNER JOIN dbo.StudentsInDepartments AS sid ON s.StudentID = sid.StudentID
+        INNER JOIN dbo.Departments AS d ON sid.DepartmentID = d.DepartmentID
+    WHERE sid.DepartmentID = @DepartmentID
     ORDER BY s.LastName, s.FirstName;
 END;
 GO
 
 GRANT EXECUTE ON OBJECT::dbo.usp_GetDepartmentRoster TO [AppReaderRole];
+
+
+EXEC dbo.usp_GetDepartmentRoster @DepartmentID = 1;
+
+GO
 ```
 
 ### Common failure mode
