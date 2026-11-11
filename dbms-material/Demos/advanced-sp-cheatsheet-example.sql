@@ -128,7 +128,13 @@ EXEC dbo.usp_EnrollStudent @Semester = null, @StudentID = 1, @CourseID = 1, @Res
 SELECT @ResultCode AS ResultCode, @ResultMessage AS ResultMessage;
 GO
 
+
+-- -- Lecture Nov 9, 2026
+
 -- -- 4. Security context and permission boundaries
+-- DROP PROCEDURE IF EXISTS dbo.usp_GetDepartmentRoster
+-- GO
+
 CREATE OR ALTER PROCEDURE dbo.usp_GetDepartmentRoster
     @DepartmentID INT
 WITH EXECUTE AS OWNER
@@ -147,10 +153,30 @@ END;
 GO
 
 GRANT EXECUTE ON OBJECT::dbo.usp_GetDepartmentRoster TO [AppReaderRole];
-
+-- DENY SELECT ON OBJECT::dbo.students TO [AppReaderRole];
+GO
 
 EXEC dbo.usp_GetDepartmentRoster @DepartmentID = 1;
 EXEC dbo.usp_GetDepartmentRoster @DepartmentID = 2;
+GO
+
+-- -- execute first
+EXECUTE AS USER = 'AppReaderUser';
+
+-- -- execute third
+EXEC dbo.usp_GetDepartmentRoster @DepartmentID = 2;
+
+-- -- execute second
+SELECT SUSER_NAME(), USER_NAME()
+GO
+
+SELECT * FROM Departments
+
+-- -- sanity check
+SELECT * FROM sys.database_principals
+
+-- -- how you go back to yourself
+REVERT;
 GO
 
 -- -- 5. Performance stability patterns
@@ -175,3 +201,4 @@ BEGIN
     OPTION (RECOMPILE);
 END;
 GO
+

@@ -87,6 +87,7 @@ GROUP BY JSON_VALUE(Document, '$.universityName')
 ORDER BY CollegeCount DESC
 -- -- COUNT(*): counts the colleges for each university.
 -- -- GROUP BY: combines the rows for each university.
+-- -- (whenever we use "Count()", we have to use "Group by", but we can use "Group by" by itself).
 -- -- ORDER BY: sorts universities from the most colleges to the fewest.
 
 -- -- The following query shows each college separately because I select 
