@@ -30,7 +30,9 @@ VALUES
     (N'Grace', N'Hopper', N'Computer Science'),
     (N'Katherine', N'Johnson', N'Mathematics');
 GO
--- -- press f1 to see command pallet (what databases are available).
+-- -- Ctrl+shift+P or press and get f1 to open up command pallet to reload
+-- -- window. this resets everything in VS code like reload it the stuff that's
+-- -- currently in memory.
 
 
 -- 2. Create a basic procedure
