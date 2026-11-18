@@ -1,3 +1,6 @@
+
+-- -- Lecture Nov 18, 2026
+
 /*
 PRODUCT SALES AND INVENTORY - PART 1: FOUNDATIONS
 SQL Server 2025 / VS Code MSSQL extension. 24 tasks, 100 points.
@@ -28,6 +31,22 @@ https://learn.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql
 -- P1.01 [4] Schema discovery. Return TableSchema, TableName, PrimaryKeyColumn,
 -- IsIdentity for entity tables. Explain why keys do not encode product information.
 
+-- -- views in system table:
+-- SELECT * FROM sys.tables
+-- SELECT * FROM sys.columns
+-- SELECT object_id FROM sys.columns
+-- SELECT object_Name(object_id) FROM sys.columns
+
+SELECT s.name, object_Name(c.object_id), c.name, c.is_identity, k.type
+-- SELECT c.* , k.*, object_Name(k.object_id), t.* 
+FROM sys.columns c  
+    INNER JOIN sys.tables t on c.object_id = t.object_id
+    INNER JOIN sys.schemas s on t.schema_id = s.schema_id
+    INNER JOIN sys.key_constraints k on k.parent_object_id = t.object_id
+WHERE s.name = 'dbo' AND
+      k.type = 'PK'
+    --   k.type != 'PK'
+
 -- P1.02 [4] Return ProductCode, ProductName for active products containing LANTERN,
 -- sorted by ProductCode. Use a predicate, not a hardcoded list of codes.
 
@@ -38,6 +57,20 @@ https://learn.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql
 -- P1.04 [4] Using reporting.v_SalesDetail, return ReportYear, ReportMonth,
 -- Units, SalesAmount, grouped by calendar year/month, ordered chronologically.
 -- Units is the sum of Quantity; SalesAmount is the sum of LineAmount.
+
+-- SELECT * FROM reporting.v_SalesDetail
+-- SELECT OrderedAt FROM reporting.v_SalesDetail
+
+SELECT DATEPART(YEAR,OrderedAt) AS ReportYear,
+       DATEPART(MONTH,OrderedAt) AS ReportMonth,
+       --CONCAT(DATEPART(YEAR,OrderedAt),'-',DATEPART(MONTH,OrderedAt)),
+       SUM(Quantity) AS Units,
+       SUM(LineAmount) AS SalesAmount
+FROM reporting.v_SalesDetail
+GROUP BY CONCAT(DATEPART(YEAR,OrderedAt),'-',DATEPART(MONTH,OrderedAt)),
+         DATEPART(YEAR,OrderedAt),
+         DATEPART(MONTH,OrderedAt)
+ORDER BY ReportYear, ReportMonth
 
 -- P1.05 [4] LEFT JOIN customers to CustomerSalesOrder. Return CustomerCode,
 -- OrderCount for ALL customers, including zero matches; sort by CustomerCode.
