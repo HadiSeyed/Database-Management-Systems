@@ -79,6 +79,11 @@ ORDER BY ReportYear, ReportMonth
 -- P1.06 [4] Read reporting.v_StockOnHand. Return WarehouseCode, ProductCode,
 -- QuantityOnHand for MAIN, sorted by ProductCode. Explain the ledger's signs.
 
+-- SELECT *
+SELECT WarehouseCode, QuantityOnHand
+FROM reporting.v_StockOnHand
+WHERE ProductCode = '22900'
+
 /*
 GUIDE B - reversible mutation:
 SET XACT_ABORT ON;
@@ -105,6 +110,32 @@ https://learn.microsoft.com/en-us/sql/t-sql/statements/delete-transact-sql
 -- ReviewNote nvarchar(120) NOT NULL). In a transaction insert three distinct
 -- review notes; DELETE one by captured identity and prove two remain; rollback.
 -- Keep the empty demonstration table for Part 2.
+
+CREATE TABLE student.ReviewQueue
+(
+ReviewId int IDENTITY primary key,
+ReviewNote nvarchar(120) NOT NULL    
+)
+
+BEGIN TRANSACTION
+INSERT INTO student.ReviewQueue(ReviewNote) VALUES ('Note 1');
+INSERT INTO student.ReviewQueue(ReviewNote) VALUES ('Note 2');
+INSERT INTO student.ReviewQueue(ReviewNote) VALUES ('Note 3');
+
+SELECT * FROM student.ReviewQueue
+
+DECLARE @ReviewId INT
+SET @ReviewId = (select CONVERT(INT, SCOPE_IDENTITY()))
+
+DELETE FROM student.ReviewQueue
+
+SELECT * FROM student.ReviewQueue
+
+SELECT @@TRANCOUNT
+
+ROLLBACK
+
+SELECT @@TRANCOUNT
 
 -- P1.10 [4] In a disposable transaction try a negative SalesOrderLine quantity.
 -- Include SourceLineCode and SourceRecordedAt. Capture the expected CHECK
@@ -143,6 +174,20 @@ https://learn.microsoft.com/en-us/sql/t-sql/statements/create-procedure-transact
 -- P1.11 [4] Create student.v_OrderTotals with SalesOrderId, OrderNumber,
 -- TotalAmount. Reuse reporting.v_SalesDetail; one row per order with lines.
 -- Compare order 536365 with P1.03; do not aggregate a header after payment joins.
+
+CREATE OR ALTER VIEW student.v_OrderTotals
+AS 
+    SELECT so.SalesOrderId, so.OrderNumber, sum(sol.Quantity * sol.UnitPrice) AS TotalAmount
+    FROM SalesOrder so  
+        INNER JOIN rel.SalesOrderSalesOrderLine sosol on sosol.SalesOrderId = so.SalesOrderId
+        INNER JOIN dbo.SalesOrderLine sol on sosol.SalesOrderLineId = sol.SalesOrderLineId
+    GROUP BY so.OrderNumber, so.SalesOrderId;
+
+SELECT * FROM student.v_OrderTotals
+
+SELECT top 10 * FROM SalesOrder
+SELECT top 10 * FROM SalesOrderLine
+-- SalesOrderId, OrderNumber, TotalAmount
 
 -- P1.12 [4] Create student.usp_CustomerOrders(@CustomerCode varchar(30)).
 -- Reject NULL/unknown codes with THROW. Return OrderNumber, OrderedAt,
